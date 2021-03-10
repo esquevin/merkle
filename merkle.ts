@@ -59,3 +59,18 @@ export function getCreateMerkleTreeForHashMethod(hashMethod: HashMethod) {
     return currentLevel[0];
   };
 }
+
+export function getMerkleTreeHeight(root: MerkleNode) {
+  // Can also be computed as Log2(data.length) if you know the data
+
+  if (!root) {
+    return 0;
+  }
+  let height = 1;
+  let currentNode = root;
+  while (currentNode.leftChild !== undefined) {
+    height += 1;
+    currentNode = currentNode.leftChild;
+  }
+  return height;
+}

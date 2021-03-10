@@ -1,6 +1,7 @@
 import { assertEquals } from "https://deno.land/std@0.89.0/testing/asserts.ts";
 import {
   getCreateMerkleTreeForHashMethod,
+  getMerkleTreeHeight,
 } from "./merkle.ts";
 
 const createMerkleTreeWithNoHash = getCreateMerkleTreeForHashMethod(
@@ -97,4 +98,15 @@ Deno.test("not a power of 2", () => {
       rightChild: undefined
     }
   });
+});
+
+Deno.test("getMerkleTreeHeight", () => {
+  assertEquals(getMerkleTreeHeight(createMerkleTreeWithNoHash(1)), 1);
+  assertEquals(getMerkleTreeHeight(createMerkleTreeWithNoHash(1, 2)), 2);
+  assertEquals(getMerkleTreeHeight(createMerkleTreeWithNoHash(1, 2, 3)), 3);
+  assertEquals(getMerkleTreeHeight(createMerkleTreeWithNoHash(1, 2, 3, 4)), 3);
+  assertEquals(
+    getMerkleTreeHeight(createMerkleTreeWithNoHash(1, 2, 3, 4, 5)),
+    4
+  );
 });
