@@ -1,3 +1,4 @@
+import { Sha256 } from "https://deno.land/std@0.90.0/hash/sha256.ts";
 
 export type HashMethod = (v: string) => string;
 
@@ -41,6 +42,12 @@ function computeLevel(
     level.push(mergeNode(hashMethod, leftChild, rightChild));
   }
   return level;
+}
+
+function hashSha256(value: string) {
+  const hash = new Sha256();
+  hash.update(value);
+  return hash.toString();
 }
 
 export function getCreateMerkleTreeForHashMethod(hashMethod: HashMethod) {
@@ -91,4 +98,27 @@ export function getMerkleTreeLevel(
     getMerkleTreeLevel(root.leftChild, level - 1),
     getMerkleTreeLevel(root.rightChild, level - 1)
   ].flat();
+}
+
+export const createMerkleTreeSha256 = getCreateMerkleTreeForHashMethod(
+  hashSha256
+);
+
+class MerkleTree<T> {
+  root: MerkleNode;
+
+  constructor(...args: T[]) {
+    this.root = createMerkleTreeSha256(...args);
+  }
+  height() {
+    return getMerkleTreeHeight(this.root);
+  }
+
+  level(level: number) {
+    return getMerkleTreeLevel(this.root, level);
+  }
+}
+
+export function createMerkleTree<T>(...args: T[]) {
+  return new MerkleTree<T>(...args);
 }
