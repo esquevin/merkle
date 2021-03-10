@@ -2,6 +2,7 @@ import { assertEquals } from "https://deno.land/std@0.89.0/testing/asserts.ts";
 import {
   getCreateMerkleTreeForHashMethod,
   getMerkleTreeHeight,
+  getMerkleTreeLevel,
 } from "./merkle.ts";
 
 const createMerkleTreeWithNoHash = getCreateMerkleTreeForHashMethod(
@@ -109,4 +110,11 @@ Deno.test("getMerkleTreeHeight", () => {
     getMerkleTreeHeight(createMerkleTreeWithNoHash(1, 2, 3, 4, 5)),
     4
   );
+});
+
+Deno.test("getMerkleTreeLevel", () => {
+  const MT = createMerkleTreeWithNoHash(1, 2, 3, 4);
+  assertEquals(getMerkleTreeLevel(MT, 0), ["1234"]);
+  assertEquals(getMerkleTreeLevel(MT, 1), ["12", "34"]);
+  assertEquals(getMerkleTreeLevel(MT, 2), ["1", "2", "3", "4"]);
 });

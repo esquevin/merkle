@@ -74,3 +74,21 @@ export function getMerkleTreeHeight(root: MerkleNode) {
   }
   return height;
 }
+
+export function getMerkleTreeLevel(
+  root: MerkleNode | undefined,
+  level: number
+): string[] {
+  if (root === undefined) {
+    return [];
+  }
+
+  if (level === 0) {
+    return [root.hash];
+  }
+
+  return [
+    getMerkleTreeLevel(root.leftChild, level - 1),
+    getMerkleTreeLevel(root.rightChild, level - 1)
+  ].flat();
+}
